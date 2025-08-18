@@ -112,7 +112,7 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
 
 | Detail              | Value                                                                  |
 |---------------------|------------------------------------------------------------------------|
-| Console URL         | [https://533266958532.signin.aws.amazon.com/console]([https://console.aws.amazon.com](https://533266958532.signin.aws.amazon.com/console))       |
+| Console URL         | [https://xxxxxxxxxxxx.signin.aws.amazon.com/console]([https://console.aws.amazon.com](https://xxxxxxxxxxxx.signin.aws.amazon.com/console))       |
 | Account ID          | xxxxxxxxxxxx                                   |
 | Account Alias       |                                          |
 | IAM Username        | cloud-watch-user                                                      |
