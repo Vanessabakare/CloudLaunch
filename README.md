@@ -65,16 +65,27 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
 
 ---
 
-## IAM Policy (JSON)
+## IAM Policies (JSON)
+
+### S3 Access Policy
 
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "AllowS3ListAccess",
+      "Sid": "AllowListBuckets",
       "Effect": "Allow",
-      "Action": ["s3:ListBucket"],
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowSpecificBucketListing",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
       "Resource": [
         "arn:aws:s3:::cloudlaunch-site-bucket",
         "arn:aws:s3:::cloudlaunch-private-bucket",
@@ -84,23 +95,37 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
     {
       "Sid": "AllowSiteBucketReadOnly",
       "Effect": "Allow",
-      "Action": ["s3:GetObject"],
-      "Resource": ["arn:aws:s3:::cloudlaunch-site-bucket/*"]
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::cloudlaunch-site-bucket/*"
     },
     {
       "Sid": "AllowPrivateBucketReadWrite",
       "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:PutObject"],
-      "Resource": ["arn:aws:s3:::cloudlaunch-private-bucket/*"]
-    },
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::cloudlaunch-private-bucket/*"
+    }
+  ]
+}
+```
+### S3 Access Policy
+
+### VPC IAM Policy
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
     {
       "Sid": "AllowReadOnlyVpcAccess",
       "Effect": "Allow",
       "Action": [
         "ec2:DescribeVpcs",
         "ec2:DescribeSubnets",
-        "ec2:DescribeRouteTables",
-        "ec2:DescribeSecurityGroups"
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeRouteTables"
       ],
       "Resource": "*"
     }
