@@ -19,13 +19,13 @@ I opened the AWS Management Console and navigated to the S3 service to begin set
 
 Next, I went to the IAM section and created a user named `cloud-watch-user`. I wrote a custom JSON policy that:
 
-- Grants `ListBucket` access to all three buckets
-- Grants `GetObject` and `PutObject` on `cloudlaunch-private-bucket2025`
-- Grants `GetObject` on `cloudlaunch-site-bucket2025`
-- Denies `DeleteObject` anywhere
-- Prevents access to the contents of `cloudlaunch-visible-only-bucket2025`
+- Grants **ListBucket** access to all three buckets (`cloudlaunch-site-bucket2025`, `cloudlaunch-private-bucket2025`, `cloudlaunch-visible-only-bucket2025`)  
+- Grants **GetObject** and **PutObject** on `cloudlaunch-private-bucket2025`  
+- Grants **GetObject** on `cloudlaunch-site-bucket2025`  
+- Does **not** grant **DeleteObject** anywhere (no `s3:DeleteObject` action included)  
+- Does **not** grant object access to `cloudlaunch-visible-only-bucket2025` (only listing)
 
-I attached this policy to the IAM user and tested access. I also optionally created a CloudFront distribution in front of the public S3 bucket to enable HTTPS and caching.
+I attached this policy to the IAM user. I also optionally created a CloudFront distribution in front of the public S3 bucket to enable HTTPS and caching.
 
 ---
 
@@ -87,16 +87,16 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
       "Effect": "Allow",
       "Action": "s3:ListBucket",
       "Resource": [
-        "arn:aws:s3:::cloudlaunch-site-bucket",
-        "arn:aws:s3:::cloudlaunch-private-bucket",
-        "arn:aws:s3:::cloudlaunch-visible-only-bucket"
+        "arn:aws:s3:::cloudlaunch-site-bucket2025",
+        "arn:aws:s3:::cloudlaunch-private-bucket2025",
+        "arn:aws:s3:::cloudlaunch-visible-only-bucket2025"
       ]
     },
     {
       "Sid": "AllowSiteBucketReadOnly",
       "Effect": "Allow",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::cloudlaunch-site-bucket/*"
+      "Resource": "arn:aws:s3:::cloudlaunch-site-bucket2025/*"
     },
     {
       "Sid": "AllowPrivateBucketReadWrite",
@@ -105,7 +105,7 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
         "s3:GetObject",
         "s3:PutObject"
       ],
-      "Resource": "arn:aws:s3:::cloudlaunch-private-bucket/*"
+      "Resource": "arn:aws:s3:::cloudlaunch-private-bucket2025/*"
     }
   ]
 }
