@@ -110,8 +110,6 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
   ]
 }
 ```
-### S3 Access Policy
-
 ### VPC IAM Policy
 
 ```json
