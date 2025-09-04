@@ -71,43 +71,66 @@ Finally, I created another IAM policy that gives the `cloud-watch-user` read-onl
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "AllowListBuckets",
-      "Effect": "Allow",
-      "Action": [
-        "s3:ListAllMyBuckets",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "AllowSpecificBucketListing",
-      "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": [
-        "arn:aws:s3:::cloudlaunch-site-bucket2025",
-        "arn:aws:s3:::cloudlaunch-private-bucket2025",
-        "arn:aws:s3:::cloudlaunch-visible-only-bucket2025"
-      ]
-    },
-    {
-      "Sid": "AllowSiteBucketReadOnly",
-      "Effect": "Allow",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::cloudlaunch-site-bucket2025/*"
-    },
-    {
-      "Sid": "AllowPrivateBucketReadWrite",
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject"
-      ],
-      "Resource": "arn:aws:s3:::cloudlaunch-private-bucket2025/*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowListBucketsForConsole",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowListObjectsOnThreeBuckets",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": [
+                "arn:aws:s3:::cloudlaunch-site-bucket2025",
+                "arn:aws:s3:::cloudlaunch-private-bucket2025",
+                "arn:aws:s3:::cloudlaunch-visible-only-bucket2025"
+            ]
+        },
+        {
+            "Sid": "AllowGetOnSiteOnly",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::cloudlaunch-site-bucket2025/*"
+        },
+        {
+            "Sid": "AllowGetPutOnPrivateOnly",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::cloudlaunch-private-bucket2025/*"
+        },
+        {
+            "Sid": "ExplicitDenyDeletesEverywhere",
+            "Effect": "Deny",
+            "Action": [
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:DeleteObjectTagging",
+                "s3:DeleteObjectVersionTagging"
+            ],
+            "Resource": "arn:aws:s3:::*/*"
+        },
+        {
+            "Sid": "ExplicitDenyAccessToVisibleOnlyBucketObjects",
+            "Effect": "Deny",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:PutObjectTagging"
+            ],
+            "Resource": "arn:aws:s3:::cloudlaunch-visible-only-bucket2025/*"
+        }
+    ]
 }
 ```
 ### VPC IAM Policy
